@@ -1,8 +1,140 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Try Your Best</title>
+  <meta charset="UTF-8">
+  <title>Semantic Segmentation on ADE20K | SOTA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    p.description {
+      text-align: center;
+      max-width: 800px;
+      margin: 20px auto;
+      color: #555;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+      width: 90%;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #f1f1f1;
+      cursor: pointer;
+    }
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
-Hello, world!
+
+  <h1>Semantic Segmentation on ADE20K</h1>
+  <p class="description">
+    This page tracks the current state-of-the-art results for semantic segmentation on the ADE20K dataset. 
+    Methods are ranked by their mean IoU (mIoU) on the validation set.
+  </p>
+
+  <table id="sota-table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Method</th>
+        <th onclick="sortTable(1)">Paper</th>
+        <th onclick="sortTable(2)">Code</th>
+        <th onclick="sortTable(3)">mIoU (%)</th>
+        <th onclick="sortTable(4)">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mask2Former</td>
+        <td><a href="https://arxiv.org/abs/2112.01527" target="_blank">Paper</a></td>
+        <td><a href="https://github.com/facebookresearch/Mask2Former" target="_blank">Code</a></td>
+        <td>57.8</td>
+        <td>2021-12</td>
+      </tr>
+      <tr>
+        <td>SegFormer</td>
+        <td><a href="https://arxiv.org/abs/2105.15203" target="_blank">Paper</a></td>
+        <td><a href="https://github.com/NVlabs/SegFormer" target="_blank">Code</a></td>
+        <td>55.6</td>
+        <td>2021-05</td>
+      </tr>
+      <tr>
+        <td>DeepLabV3+</td>
+        <td><a href="https://arxiv.org/abs/1802.02611" target="_blank">Paper</a></td>
+        <td><a href="https://github.com/tensorflow/models/tree/master/research/deeplab" target="_blank">Code</a></td>
+        <td>46.9</td>
+        <td>2018-02</td>
+      </tr>
+      <!-- Add more rows here -->
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Inspired by <a href="https://paperswithcode.com/" target="_blank">Papers with Code</a>.
+  </div>
+
+<script>
+function sortTable(n) {
+  const table = document.getElementById("sota-table");
+  let switching = true;
+  let dir = "desc";
+  let switchcount = 0;
+
+  while (switching) {
+    switching = false;
+    const rows = table.rows;
+    for (let i = 1; i < (rows.length - 1); i++) {
+      let shouldSwitch = false;
+      const x = rows[i].getElementsByTagName("TD")[n];
+      const y = rows[i + 1].getElementsByTagName("TD")[n];
+      
+      let xContent = x.textContent || x.innerText;
+      let yContent = y.textContent || y.innerText;
+      
+      if (!isNaN(parseFloat(xContent)) && !isNaN(parseFloat(yContent))) {
+        xContent = parseFloat(xContent);
+        yContent = parseFloat(yContent);
+      }
+
+      if ((dir == "asc" && xContent > yContent) || (dir == "desc" && xContent < yContent)) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "desc") {
+        dir = "asc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
 </body>
 </html>
